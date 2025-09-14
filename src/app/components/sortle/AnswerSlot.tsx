@@ -30,7 +30,7 @@ export default function AnswerSlot({
     return (
         <div
             ref={setNodeRef}
-            className={`flex-1 border-2 border-dashed border-gray-400 rounded-md m-1 p-4 min-w-[40px] text-center  ${bgClass}`}
+            className={`flex flex-col flex-1 border-2 border-dashed border-gray-400 rounded-md m-1 p-4 min-w-[120px] text-center  ${bgClass}`}
         >
             <div className="font-bold mb-2">{label}</div>
             {problem ? (

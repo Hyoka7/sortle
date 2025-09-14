@@ -6,20 +6,11 @@ export default function SortableSlotItem({ id, name }: { id: string; name: strin
     const { attributes, listeners, setNodeRef, transform, transition } =
         useSortable({ id });
 
-    const style = {
-        transform: CSS.Transform.toString(transform),
-        transition,
-        padding: "8px 12px",
-        margin: "6px",
-        background: "#f2f2f2",
-        borderRadius: "6px",
-        cursor: "grab",
-        minWidth: "80px",
-        textAlign: "center" as const,
-    }
-
     return (
-        <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
+        <div ref={setNodeRef} style={{
+            transform: CSS.Transform.toString(transform),
+            transition,
+        }} {...attributes} {...listeners} className="p-2 bg-gray-100 rounded-md cursor-grab min-w-[80px] text-center break-words border-2 border-gray-900">
             {name}
         </div>
     );

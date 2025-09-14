@@ -16,8 +16,7 @@ export default function SortableItem({ id, name, className }: Props) {
             ref={setNodeRef}
             {...attributes}
             {...listeners}
-            className={`
-        p-2 m-1 rounded-md cursor-grab min-w-[80px] text-center border-2 border-gray-500 w-32 break-words
+            className={`p-2 m-1 rounded-md cursor-grab min-w-[80px] text-center border-2 border-gray-500 w-auto break-words
         ${className ?? ""}
       `}
             style={{

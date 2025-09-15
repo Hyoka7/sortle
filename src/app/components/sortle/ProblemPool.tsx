@@ -11,9 +11,10 @@ export default function ProblemPool({ problems }: { problems: Problem[] }) {
         <div
             ref={setNodeRef}
             className={clsx(
-                "flex flex-wrap justify-center p-3 rounded-md bg-cyan-100",
+                "flex flex-wrap justify-center p-3 rounded-md",
+                "bg-cyan-100 dark:bg-cyan-900/50",
                 {
-                    "bg-green-100": isOver,
+                    "bg-green-200 dark:bg-green-800/60": isOver,
                 }
             )}
         >

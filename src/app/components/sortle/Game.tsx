@@ -5,6 +5,7 @@ import clsx from "clsx";
 import ProblemPool from "./ProblemPool";
 import AnswerSlot from "./AnswerSlot";
 import { useSortleGame } from "./useSortleGame";
+import { ThemeToggleButton } from "./ThemeToggleButton";
 
 const customCollisionDetection: CollisionDetection = (args) => {
     const pointerCollisions = pointerWithin(args);
@@ -22,8 +23,11 @@ export default function Game() {
     if (isLoading) return <p>Loading...</p>;
 
     return (
-        <div className="p-4 md:p-8">
-            <h1 className="font-bold text-3xl text-center">AtCoder Beginner Contest Sortle</h1>
+        <div className="p-4 md:p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+            <div className="flex justify-center items-center gap-4">
+                <h1 className="font-bold text-3xl text-center">AtCoder Beginner Contest Sortle</h1>
+                <ThemeToggleButton />
+            </div>
 
             <DndContext collisionDetection={customCollisionDetection} onDragEnd={handleDragEnd}>
                 <h3 className="mt-4 text-xl font-bold">Problems</h3>
@@ -44,13 +48,13 @@ export default function Game() {
                 </div>
             </DndContext>
 
-            <div className="mt-3">
+            <div className="mt-3 flex justify-center">
                 <button
                     onClick={checkAnswer}
                     className={clsx(
                         "text-white font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 focus:outline-none focus:ring-4",
-                        "bg-blue-700 hover:bg-blue-800 focus:ring-blue-300",
-                        "dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                        "bg-blue-600 hover:bg-blue-700 focus:ring-blue-400",
+                        "dark:bg-blue-700 dark:hover:bg-blue-800 dark:focus:ring-blue-900"
                     )}
                 >
                     Submit
@@ -59,8 +63,8 @@ export default function Game() {
                     onClick={reset}
                     className={clsx(
                         "text-white font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 focus:outline-none focus:ring-4",
-                        "bg-red-700 hover:bg-red-800 focus:ring-red-300",
-                        "dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                        "bg-red-600 hover:bg-red-700 focus:ring-red-400",
+                        "dark:bg-red-700 dark:hover:bg-red-800 dark:focus:ring-red-900"
                     )}
                 >
                     Reset
@@ -75,8 +79,8 @@ export default function Game() {
                             onClick={handleShare}
                             className={clsx(
                                 "text-white font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 focus:outline-none focus:ring-4",
-                                "bg-green-700 hover:bg-green-800 focus:ring-green-300",
-                                "dark: bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                                "mt-2 bg-green-600 hover:bg-green-700 focus:ring-green-300",
+                                "dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800"
                             )}>
                             結果をシェア
                         </button>

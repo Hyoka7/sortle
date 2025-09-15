@@ -17,7 +17,8 @@ export default function SortableSlotItem({ id, name }: { id: string; name: strin
             {...attributes}
             {...listeners}
             className={clsx(
-                "p-2 bg-gray-100 rounded-md cursor-grab min-w-[80px] text-center break-words border-2 border-gray-900"
+                "p-2 rounded-md cursor-grab min-w-[80px] text-center break-words border-2",
+                "bg-white dark:bg-gray-700 border-gray-900 dark:border-gray-100 text-gray-900 dark:text-gray-100"
             )}
         >
             {name}

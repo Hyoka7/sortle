@@ -15,6 +15,17 @@ const bgColors = [
     "bg-red-100",
 ];
 
+const darkBgColors = [
+    "dark:bg-gray-800",
+    "dark:bg-amber-800",
+    "dark:bg-green-800",
+    "dark:bg-sky-800",
+    "dark:bg-blue-800",
+    "dark:bg-yellow-800",
+    "dark:bg-orange-800",
+    "dark:bg-red-800",
+];
+
 export default function AnswerSlot({
     id,
     label,
@@ -31,10 +42,11 @@ export default function AnswerSlot({
         <div
             ref={setNodeRef}
             className={clsx(
-                "flex flex-col flex-1 border-2 border-dashed border-gray-400 rounded-md m-1 p-4 min-w-[120px] text-center",
+                "flex flex-col flex-1 border-2 border-dashed rounded-md m-1 p-4 min-w-[120px] text-center",
+                "border-gray-400 dark:border-gray-600",
                 {
-                    "bg-blue-200": isOver,
-                    [bgColors[index]]: !isOver,
+                    "bg-green-200 dark:bg-green-800/60": isOver,
+                    [`${bgColors[index]} ${darkBgColors[index]}`]: !isOver,
                 }
             )}
         >
@@ -42,7 +54,7 @@ export default function AnswerSlot({
             {problem ? (
                 <SortableSlotItem id={problem.id} name={problem.name} />
             ) : (
-                <span className="text-gray-400">Drop here</span>
+                <span className="text-gray-400 dark:text-white">Drop here</span>
             )}
         </div>
     );

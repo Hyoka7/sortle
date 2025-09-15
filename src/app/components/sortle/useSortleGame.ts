@@ -14,6 +14,7 @@ export function useSortleGame() {
     const [chosenNum, setChosenNum] = useState<number | null>(null);
     const [shareText, setShareText] = useState<string | null>(null);
     const [submitCount, setSubmitCount] = useState<number>(1);
+    const [jstDate, setJstDate] = useState<string>('');
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const startTimeRef = useRef<number>(0);
@@ -32,11 +33,10 @@ export function useSortleGame() {
         const fetchAndSetupGame = async () => {
             setIsLoading(true);
             try {
-                const res = await fetch("/filtered_problems.json");
+                const res = await fetch("/api/problems");
                 if (!res.ok) throw new Error(`Fetch failed with status ${res.status}`);
                 const data: Problem[] = await res.json();
                 setAllProblems(data);
-
                 const parsed = data
                     .map((item) => {
                         const match = item.contest_id.match(/^abc(\d+)$/);
@@ -44,15 +44,29 @@ export function useSortleGame() {
                         return { num: parseInt(match[1], 10), problem: item };
                     })
                     .filter((v): v is { num: number; problem: Problem } => v !== null);
-
                 const MIN_CONTEST_NUM = 126;
                 const valid = parsed.filter((item) => item.num >= MIN_CONTEST_NUM);
                 if (valid.length === 0) {
                     return;
                 }
+                const now = new Date();
+                const dateForSeed = new Date(now);
+                if (now.getUTCHours() < 15) {
+                    dateForSeed.setUTCDate(dateForSeed.getUTCDate() - 1);
+                }
+                const year = dateForSeed.getFullYear();
+                const month = (dateForSeed.getMonth() + 1).toString().padStart(2, '0');
+                const day = dateForSeed.getDate().toString().padStart(2, '0');
+                setJstDate(`${year}/${month}/${day}`);
 
-                const upper = Math.max(...valid.map((item) => item.num));
-                const chosen = Math.floor(Math.random() * (upper - MIN_CONTEST_NUM + 1)) + MIN_CONTEST_NUM;
+                const seed = dateForSeed.getUTCFullYear() * 10000 + (dateForSeed.getUTCMonth() + 1) * 100 + dateForSeed.getUTCDate();
+                const seededRandom = (s: number) => {
+                    const x = Math.sin(s) * 10000;
+                    return x - Math.floor(x);
+                };
+
+                const uniqueContestNums = [...new Set(valid.map(item => item.num))];
+                const chosen = uniqueContestNums[Math.floor(seededRandom(seed) * uniqueContestNums.length)];
                 setChosenNum(chosen);
 
                 const hits = valid.filter((item) => item.num === chosen).map((item) => item.problem);
@@ -80,7 +94,6 @@ export function useSortleGame() {
         const fromSlotIndex = slots.indexOf(activeId);
         const isMovingFromSlot = fromSlotIndex !== -1;
 
-        // Case 1: Moving to a slot
         if (overContainerId.startsWith("slot-")) {
             const toSlotIndex = parseInt(overContainerId.replace("slot-", ""), 10);
             let nextSlots = [...slots];
@@ -93,7 +106,7 @@ export function useSortleGame() {
                 nextSlots[toSlotIndex] = activeId;
                 nextProblems = problems.filter((p) => p.id !== activeId);
 
-                if (itemInTargetSlotId) { // If target slot was occupied, move its item to the pool
+                if (itemInTargetSlotId) {
                     const problemToReturn = allProblems.find((p) => p.id === itemInTargetSlotId);
                     if (problemToReturn) {
                         nextProblems.push(problemToReturn);
@@ -105,16 +118,14 @@ export function useSortleGame() {
             return;
         }
 
-        // Case 2: Moving to the problem pool
         if (overContainerId === "pool") {
-            if (isMovingFromSlot) { // Moving from a slot to the pool
+            if (isMovingFromSlot) {
                 setProblems((cur) => {
                     const original = allProblems.find((p) => p.id === activeId);
                     return original ? [...cur, original] : cur;
                 });
                 setSlots((cur) => cur.map((id, index) => (index === fromSlotIndex ? "" : id)));
             }
-            // If not from a slot, it's a no-op (moving within the pool)
         }
     };
 
@@ -128,7 +139,7 @@ export function useSortleGame() {
     const checkAnswer = () => {
         if (slots.some((s) => s === "")) {
             setShareText(null);
-            setResult("まだ空欄があります");
+            setResult("Set All Problems");
             return;
         }
 
@@ -136,13 +147,13 @@ export function useSortleGame() {
 
         if (hit === correctOrder.length) {
             const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
-            const minutes = Math.floor(elapsed / 60);
+            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
             const seconds = (elapsed % 60).toString().padStart(2, '0');
-            const resultText = `🎉Correct!(From ABC${chosenNum}) Time:${minutes}:${seconds} ${submitCount} Attempt`;
-            const textToShare = `ABC${chosenNum}の問題を${submitCount}回でクリア！🎉\nタイム: ${minutes}:${seconds}\n#ABCSortle`;
+            const resultText = `🎉Correct!(From ABC${chosenNum}) Time:${minutes}:${seconds} ${submitCount}回目の挑戦`;
+            const textToShare = `ABC Sortle (${jstDate})\n📤:${submitCount}🎉\n⌛: ${minutes}:${seconds}\n#ABCSortle`;
             setResult(resultText);
             setShareText(textToShare);
-            setSubmitCount(1); // Reset for next game
+            setSubmitCount(1);
         } else {
             setResult(`${hit} Hit`);
             setShareText(null);

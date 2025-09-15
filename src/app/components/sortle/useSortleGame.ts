@@ -192,7 +192,7 @@ export function useSortleGame() {
                 .padStart(2, "0");
             const seconds = (elapsed % 60).toString().padStart(2, "0");
             const resultText = `🎉Correct!(From ABC${chosenNum}) Time:${minutes}:${seconds} Attempts:${submitCount}`;
-            const textToShare = `ABC Sortle (${jstDate})\n📤:${submitCount}\n⌛: ${minutes}:${seconds}\n#ABCSortle`;
+            const textToShare = `ABC Sortle (${jstDate})\nTime:${submitCount}\nAttempts:${minutes}:${seconds}\n#ABCSortle`;
             setResult(resultText);
             setShareText(textToShare);
             setSubmitCount(1);

@@ -1,5 +1,6 @@
 "use client";
 import { useSortable } from "@dnd-kit/sortable";
+import clsx from "clsx";
 import { CSS } from "@dnd-kit/utilities";
 
 type Props = {
@@ -16,9 +17,10 @@ export default function SortableItem({ id, name, className }: Props) {
             ref={setNodeRef}
             {...attributes}
             {...listeners}
-            className={`p-2 m-1 rounded-md cursor-grab min-w-[80px] text-center border-2 border-gray-500 w-auto break-words
-        ${className ?? ""}
-      `}
+            className={clsx(
+                "p-2 m-1 rounded-md cursor-grab min-w-[80px] text-center border-2 border-gray-500 w-auto break-words",
+                className
+            )}
             style={{
                 transform: CSS.Transform.toString(transform),
                 transition,

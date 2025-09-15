@@ -1,5 +1,6 @@
 "use client";
 import { useDroppable } from "@dnd-kit/core";
+import clsx from "clsx";
 import SortableSlotItem from "./SortableSlotItem";
 import type { Problem } from "./types";
 
@@ -26,11 +27,16 @@ export default function AnswerSlot({
     index: number;
 }) {
     const { setNodeRef, isOver } = useDroppable({ id });
-    const bgClass = isOver ? "bg-blue-200" : bgColors[index];
     return (
         <div
             ref={setNodeRef}
-            className={`flex flex-col flex-1 border-2 border-dashed border-gray-400 rounded-md m-1 p-4 min-w-[120px] text-center  ${bgClass}`}
+            className={clsx(
+                "flex flex-col flex-1 border-2 border-dashed border-gray-400 rounded-md m-1 p-4 min-w-[120px] text-center",
+                {
+                    "bg-blue-200": isOver,
+                    [bgColors[index]]: !isOver,
+                }
+            )}
         >
             <div className="font-bold mb-2">{label}</div>
             {problem ? (

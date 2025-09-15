@@ -1,6 +1,7 @@
 "use client";
 import { DndContext, pointerWithin, rectIntersection, CollisionDetection } from "@dnd-kit/core";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
+import clsx from "clsx";
 import ProblemPool from "./ProblemPool";
 import AnswerSlot from "./AnswerSlot";
 import { useSortleGame } from "./useSortleGame";
@@ -45,8 +46,26 @@ export default function Game() {
             </DndContext>
 
             <div className="mt-3">
-                <button onClick={checkAnswer} className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Submit</button>
-                <button onClick={reset} className="text-white bg-blue-700 hover:bg-blue-800 focus:outline-none focus:ring-4 focus:ring-red-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800">Reset</button>
+                <button
+                    onClick={checkAnswer}
+                    className={clsx(
+                        "text-white font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 focus:outline-none focus:ring-4",
+                        "bg-blue-700 hover:bg-blue-800 focus:ring-blue-300",
+                        "dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                    )}
+                >
+                    Submit
+                </button>
+                <button
+                    onClick={reset}
+                    className={clsx(
+                        "text-white font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 focus:outline-none focus:ring-4",
+                        "bg-red-700 hover:bg-red-800 focus:ring-red-300",
+                        "dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-800"
+                    )}
+                >
+                    Reset
+                </button>
             </div>
 
             {result && <h2 className="mt-3 text-lg font-semibold">{result}</h2>}

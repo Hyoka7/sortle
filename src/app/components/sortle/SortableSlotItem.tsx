@@ -8,13 +8,18 @@ export default function SortableSlotItem({ id, name }: { id: string; name: strin
         useSortable({ id });
 
     return (
-        <div ref={setNodeRef} style={{
-            transform: CSS.Transform.toString(transform),
-            transition,
-        }} {...attributes} {...listeners} className="p-2 bg-gray-100 rounded-md cursor-grab min-w-[80px] text-center break-words border-2 border-gray-900">
+        <div
+            ref={setNodeRef}
+            style={{
+                transform: CSS.Transform.toString(transform),
+                transition,
+            }}
+            {...attributes}
+            {...listeners}
             className={clsx(
                 "p-2 bg-gray-100 rounded-md cursor-grab min-w-[80px] text-center break-words border-2 border-gray-900"
             )}
+        >
             {name}
         </div>
     );

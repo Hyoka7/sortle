@@ -12,6 +12,7 @@ export function useSortleGame() {
     const [slots, setSlots] = useState<string[]>([]);
     const [result, setResult] = useState<string | null>(null);
     const [chosenNum, setChosenNum] = useState<number | null>(null);
+    const [shareText, setShareText] = useState<string | null>(null);
     const [submitCount, setSubmitCount] = useState<number>(1);
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -22,6 +23,7 @@ export function useSortleGame() {
         setProblems(shuffleArray(orderedProblems));
         setSlots(Array(orderedProblems.length).fill(""));
         setResult(null);
+        setShareText(null);
         setSubmitCount(1);
         startTimeRef.current = Date.now();
     }, []);
@@ -125,6 +127,7 @@ export function useSortleGame() {
 
     const checkAnswer = () => {
         if (slots.some((s) => s === "")) {
+            setShareText(null);
             setResult("まだ空欄があります");
             return;
         }
@@ -135,10 +138,14 @@ export function useSortleGame() {
             const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
             const minutes = Math.floor(elapsed / 60);
             const seconds = (elapsed % 60).toString().padStart(2, '0');
-            setResult(`🎉Correct!(From ABC${chosenNum}) Time:${minutes}:${seconds} ふ${submitCount} Attempt`);
+            const resultText = `🎉Correct!(From ABC${chosenNum}) Time:${minutes}:${seconds} ${submitCount} Attempt`;
+            const textToShare = `ABC${chosenNum}の問題を${submitCount}回でクリア！🎉\nタイム: ${minutes}:${seconds}\n#ABCSortle`;
+            setResult(resultText);
+            setShareText(textToShare);
             setSubmitCount(1); // Reset for next game
         } else {
             setResult(`${hit} Hit`);
+            setShareText(null);
             setSubmitCount(prev => prev + 1);
         }
     };
@@ -149,8 +156,31 @@ export function useSortleGame() {
         result,
         isLoading,
         allProblems,
+        shareText,
         handleDragEnd,
         reset,
         checkAnswer,
+        handleShare,
     };
+
+    async function handleShare() {
+        if (!shareText) return;
+
+        const shareData = {
+            title: "ABC Sortle Result",
+            text: shareText,
+            url: window.location.href,
+        };
+
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                await navigator.clipboard.writeText(`${shareText}\n${window.location.href}`);
+                alert("結果をクリップボードにコピーしました！");
+            }
+        } catch (error) {
+            console.error("Share failed:", error);
+        }
+    }
 }

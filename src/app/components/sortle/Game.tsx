@@ -1,5 +1,10 @@
 "use client";
-import { DndContext, pointerWithin, rectIntersection, CollisionDetection } from "@dnd-kit/core";
+import {
+    DndContext,
+    pointerWithin,
+    rectIntersection,
+    CollisionDetection,
+} from "@dnd-kit/core";
 import { SortableContext, rectSortingStrategy } from "@dnd-kit/sortable";
 import clsx from "clsx";
 import ProblemPool from "./ProblemPool";
@@ -18,30 +23,61 @@ const customCollisionDetection: CollisionDetection = (args) => {
 const slotLabels = ["A", "B", "C", "D", "E", "F", "G", "Ex"];
 
 export default function Game() {
-    const { problems, slots, result, isLoading, allProblems, shareText, handleDragEnd, reset, checkAnswer, handleShare } = useSortleGame();
+    const {
+        problems,
+        slots,
+        result,
+        isLoading,
+        allProblems,
+        shareText,
+        handleDragEnd,
+        reset,
+        checkAnswer,
+        handleShare,
+    } = useSortleGame();
 
     if (isLoading) return <p>Loading...</p>;
 
     return (
         <div className="p-4 md:p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
             <div className="flex justify-center items-center gap-4">
-                <h1 className="font-bold text-3xl text-center">AtCoder Beginner Contest Sortle</h1>
+                <h1 className="font-bold text-3xl text-center">
+                    AtCoder Beginner Contest Sortle
+                </h1>
                 <ThemeToggleButton />
             </div>
 
-            <DndContext collisionDetection={customCollisionDetection} onDragEnd={handleDragEnd}>
+            <DndContext
+                collisionDetection={customCollisionDetection}
+                onDragEnd={handleDragEnd}
+            >
                 <h3 className="mt-4 text-xl font-bold">Problems</h3>
-                <SortableContext items={problems.map(p => p.id)} strategy={rectSortingStrategy}>
+                <SortableContext
+                    items={problems.map((p) => p.id)}
+                    strategy={rectSortingStrategy}
+                >
                     <ProblemPool problems={problems} />
                 </SortableContext>
 
                 <h3 className="mt-4 text-xl font-bold">Your Answer</h3>
                 <div className="flex flex-wrap mt-3">
                     {slots.map((id, i) => {
-                        const problem = id !== "" ? allProblems.find((p) => p.id === id) || null : null;
+                        const problem =
+                            id !== ""
+                                ? allProblems.find((p) => p.id === id) || null
+                                : null;
                         return (
-                            <SortableContext key={`slot-ctx-${i}`} items={id ? [id] : []} strategy={rectSortingStrategy}>
-                                <AnswerSlot id={`slot-${i}`} label={slotLabels[i]} problem={problem} index={i} />
+                            <SortableContext
+                                key={`slot-ctx-${i}`}
+                                items={id ? [id] : []}
+                                strategy={rectSortingStrategy}
+                            >
+                                <AnswerSlot
+                                    id={`slot-${i}`}
+                                    label={slotLabels[i]}
+                                    problem={problem}
+                                    index={i}
+                                />
                             </SortableContext>
                         );
                     })}
@@ -81,7 +117,8 @@ export default function Game() {
                                 "text-white font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 focus:outline-none focus:ring-4",
                                 "mt-2 bg-green-600 hover:bg-green-700 focus:ring-green-300",
                                 "dark:bg-green-500 dark:hover:bg-green-600 dark:focus:ring-green-800"
-                            )}>
+                            )}
+                        >
                             結果をシェア
                         </button>
                     )}

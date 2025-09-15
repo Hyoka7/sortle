@@ -14,7 +14,7 @@ export function useSortleGame() {
     const [chosenNum, setChosenNum] = useState<number | null>(null);
     const [shareText, setShareText] = useState<string | null>(null);
     const [submitCount, setSubmitCount] = useState<number>(1);
-    const [jstDate, setJstDate] = useState<string>('');
+    const [jstDate, setJstDate] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(true);
 
     const startTimeRef = useRef<number>(0);
@@ -34,7 +34,8 @@ export function useSortleGame() {
             setIsLoading(true);
             try {
                 const res = await fetch("/api/problems");
-                if (!res.ok) throw new Error(`Fetch failed with status ${res.status}`);
+                if (!res.ok)
+                    throw new Error(`Fetch failed with status ${res.status}`);
                 const data: Problem[] = await res.json();
                 setAllProblems(data);
                 const parsed = data
@@ -43,9 +44,14 @@ export function useSortleGame() {
                         if (!match) return null;
                         return { num: parseInt(match[1], 10), problem: item };
                     })
-                    .filter((v): v is { num: number; problem: Problem } => v !== null);
+                    .filter(
+                        (v): v is { num: number; problem: Problem } =>
+                            v !== null
+                    );
                 const MIN_CONTEST_NUM = 126;
-                const valid = parsed.filter((item) => item.num >= MIN_CONTEST_NUM);
+                const valid = parsed.filter(
+                    (item) => item.num >= MIN_CONTEST_NUM
+                );
                 if (valid.length === 0) {
                     return;
                 }
@@ -55,23 +61,39 @@ export function useSortleGame() {
                     dateForSeed.setUTCDate(dateForSeed.getUTCDate() - 1);
                 }
                 const year = dateForSeed.getFullYear();
-                const month = (dateForSeed.getMonth() + 1).toString().padStart(2, '0');
-                const day = dateForSeed.getDate().toString().padStart(2, '0');
+                const month = (dateForSeed.getMonth() + 1)
+                    .toString()
+                    .padStart(2, "0");
+                const day = dateForSeed.getDate().toString().padStart(2, "0");
                 setJstDate(`${year}/${month}/${day}`);
 
-                const seed = dateForSeed.getUTCFullYear() * 10000 + (dateForSeed.getUTCMonth() + 1) * 100 + dateForSeed.getUTCDate();
+                const seed =
+                    dateForSeed.getUTCFullYear() * 10000 +
+                    (dateForSeed.getUTCMonth() + 1) * 100 +
+                    dateForSeed.getUTCDate();
                 const seededRandom = (s: number) => {
                     const x = Math.sin(s) * 10000;
                     return x - Math.floor(x);
                 };
 
-                const uniqueContestNums = [...new Set(valid.map(item => item.num))];
-                const chosen = uniqueContestNums[Math.floor(seededRandom(seed) * uniqueContestNums.length)];
+                const uniqueContestNums = [
+                    ...new Set(valid.map((item) => item.num)),
+                ];
+                const chosen =
+                    uniqueContestNums[
+                        Math.floor(
+                            seededRandom(seed) * uniqueContestNums.length
+                        )
+                    ];
                 setChosenNum(chosen);
 
-                const hits = valid.filter((item) => item.num === chosen).map((item) => item.problem);
+                const hits = valid
+                    .filter((item) => item.num === chosen)
+                    .map((item) => item.problem);
                 const ordered = [...hits].sort((a, b) =>
-                    a.problem_index.localeCompare(b.problem_index, "en", { numeric: true })
+                    a.problem_index.localeCompare(b.problem_index, "en", {
+                        numeric: true,
+                    })
                 );
                 resetGame(ordered);
             } catch (error) {
@@ -89,25 +111,36 @@ export function useSortleGame() {
         if (!over) return;
 
         const activeId = active.id.toString();
-        const overContainerId = over.data.current?.sortable?.containerId ?? over.id.toString();
+        const overContainerId =
+            over.data.current?.sortable?.containerId ?? over.id.toString();
 
         const fromSlotIndex = slots.indexOf(activeId);
         const isMovingFromSlot = fromSlotIndex !== -1;
 
         if (overContainerId.startsWith("slot-")) {
-            const toSlotIndex = parseInt(overContainerId.replace("slot-", ""), 10);
-            let nextSlots = [...slots];
+            const toSlotIndex = parseInt(
+                overContainerId.replace("slot-", ""),
+                10
+            );
+            const nextSlots = [...slots];
             let nextProblems = [...problems];
 
-            if (isMovingFromSlot) { // Moving between slots (swap)
-                [nextSlots[toSlotIndex], nextSlots[fromSlotIndex]] = [nextSlots[fromSlotIndex], nextSlots[toSlotIndex]];
-            } else { // Moving from pool to slot
+            if (isMovingFromSlot) {
+                // Moving between slots (swap)
+                [nextSlots[toSlotIndex], nextSlots[fromSlotIndex]] = [
+                    nextSlots[fromSlotIndex],
+                    nextSlots[toSlotIndex],
+                ];
+            } else {
+                // Moving from pool to slot
                 const itemInTargetSlotId = slots[toSlotIndex];
                 nextSlots[toSlotIndex] = activeId;
                 nextProblems = problems.filter((p) => p.id !== activeId);
 
                 if (itemInTargetSlotId) {
-                    const problemToReturn = allProblems.find((p) => p.id === itemInTargetSlotId);
+                    const problemToReturn = allProblems.find(
+                        (p) => p.id === itemInTargetSlotId
+                    );
                     if (problemToReturn) {
                         nextProblems.push(problemToReturn);
                     }
@@ -124,7 +157,9 @@ export function useSortleGame() {
                     const original = allProblems.find((p) => p.id === activeId);
                     return original ? [...cur, original] : cur;
                 });
-                setSlots((cur) => cur.map((id, index) => (index === fromSlotIndex ? "" : id)));
+                setSlots((cur) =>
+                    cur.map((id, index) => (index === fromSlotIndex ? "" : id))
+                );
             }
         }
     };
@@ -143,12 +178,19 @@ export function useSortleGame() {
             return;
         }
 
-        const hit = slots.reduce((acc, id, i) => acc + (id === correctOrder[i] ? 1 : 0), 0);
+        const hit = slots.reduce(
+            (acc, id, i) => acc + (id === correctOrder[i] ? 1 : 0),
+            0
+        );
 
         if (hit === correctOrder.length) {
-            const elapsed = Math.floor((Date.now() - startTimeRef.current) / 1000);
-            const minutes = Math.floor(elapsed / 60).toString().padStart(2, '0');
-            const seconds = (elapsed % 60).toString().padStart(2, '0');
+            const elapsed = Math.floor(
+                (Date.now() - startTimeRef.current) / 1000
+            );
+            const minutes = Math.floor(elapsed / 60)
+                .toString()
+                .padStart(2, "0");
+            const seconds = (elapsed % 60).toString().padStart(2, "0");
             const resultText = `🎉Correct!(From ABC${chosenNum}) Time:${minutes}:${seconds} ${submitCount}回目の挑戦`;
             const textToShare = `ABC Sortle (${jstDate})\n📤:${submitCount}🎉\n⌛: ${minutes}:${seconds}\n#ABCSortle`;
             setResult(resultText);
@@ -157,7 +199,7 @@ export function useSortleGame() {
         } else {
             setResult(`${hit} Hit`);
             setShareText(null);
-            setSubmitCount(prev => prev + 1);
+            setSubmitCount((prev) => prev + 1);
         }
     };
 
@@ -187,7 +229,9 @@ export function useSortleGame() {
             if (navigator.share) {
                 await navigator.share(shareData);
             } else {
-                await navigator.clipboard.writeText(`${shareText}\n${window.location.href}`);
+                await navigator.clipboard.writeText(
+                    `${shareText}\n${window.location.href}`
+                );
                 alert("結果をクリップボードにコピーしました！");
             }
         } catch (error) {

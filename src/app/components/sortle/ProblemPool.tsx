@@ -19,7 +19,12 @@ export default function ProblemPool({ problems }: { problems: Problem[] }) {
             )}
         >
             {problems.map((p) => (
-                <SortableItem key={p.id} id={p.id} name={p.name} className="m-1" />
+                <SortableItem
+                    key={p.id}
+                    id={p.id}
+                    name={p.name}
+                    className="m-1"
+                />
             ))}
         </div>
     );

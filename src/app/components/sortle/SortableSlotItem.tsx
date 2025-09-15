@@ -3,7 +3,13 @@ import { useSortable } from "@dnd-kit/sortable";
 import clsx from "clsx";
 import { CSS } from "@dnd-kit/utilities";
 
-export default function SortableSlotItem({ id, name }: { id: string; name: string }) {
+export default function SortableSlotItem({
+    id,
+    name,
+}: {
+    id: string;
+    name: string;
+}) {
     const { attributes, listeners, setNodeRef, transform, transition } =
         useSortable({ id });
 

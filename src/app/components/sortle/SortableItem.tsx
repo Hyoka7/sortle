@@ -10,7 +10,8 @@ type Props = {
 };
 
 export default function SortableItem({ id, name, className }: Props) {
-    const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id });
+    const { attributes, listeners, setNodeRef, transform, transition } =
+        useSortable({ id });
 
     return (
         <div

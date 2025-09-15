@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 
 type Problem = {
     id: string;
@@ -8,22 +8,26 @@ type Problem = {
     title: string;
 };
 
-
 export async function GET() {
     try {
-        const res = await fetch('https://kenkoooo.com/atcoder/resources/problems.json', {
-            next: { revalidate: 86400 }, // 1day
-        });
+        const res = await fetch(
+            "https://kenkoooo.com/atcoder/resources/problems.json",
+            {
+                next: { revalidate: 86400 }, // 1day
+            }
+        );
 
         if (!res.ok) {
             throw new Error(`Failed to fetch problems: ${res.statusText}`);
         }
 
         const allProblems: Problem[] = await res.json();
-        const filteredProblems = allProblems.filter(p => p.contest_id.startsWith('abc'));
+        const filteredProblems = allProblems.filter((p) =>
+            p.contest_id.startsWith("abc")
+        );
         return NextResponse.json(filteredProblems);
     } catch (error) {
         console.error(error);
-        return new NextResponse('Internal Server Error', { status: 500 });
+        return new NextResponse("Internal Server Error", { status: 500 });
     }
 }

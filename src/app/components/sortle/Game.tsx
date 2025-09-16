@@ -39,7 +39,7 @@ export default function Game() {
     if (isLoading) return <p>Loading...</p>;
 
     return (
-        <div className="p-4 md:p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+        <div className="p-4 md:p-8 bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen transition-colors duration-500">
             <div className="flex justify-center items-center gap-4">
                 <h1 className="font-bold text-3xl text-center">
                     AtCoder Beginner Contest Sortle

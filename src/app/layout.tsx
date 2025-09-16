@@ -13,7 +13,7 @@ export const metadata: Metadata = {
             url: "/ice.svg",
             type: "image/svg+xml",
         },
-        apple: "/ice.svg", // apple-touch-icon用
+        apple: "/ice.svg",
     },
 };
 
